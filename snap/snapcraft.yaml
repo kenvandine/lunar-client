@@ -1,0 +1,47 @@
+name: lunar-client
+base: core22
+version: 2.15.1
+summary: Lunar Client
+description: |
+   Lunar Client
+
+grade: stable
+confinement: strict
+
+architectures:
+  - build-on: amd64
+compression: lzo
+
+parts:
+  lunar-client:
+    plugin: nil
+    build-packages:
+      - wget
+    override-pull: |
+      craftctl default
+      wget -O lunar-client https://launcherupdates.lunarclientcdn.com/Lunar%20Client-$SNAPCRAFT_PROJECT_VERSION.AppImage
+      chmod a+x lunar-client
+      ./lunar-client --appimage-extract
+      mv squashfs-root/* $CRAFT_PART_INSTALL
+    prime:
+      - -usr/lib
+      - -chrome-sandbox
+
+apps:
+  lunar-client:
+    extensions: [gnome]
+    command: lunarclient --no-sandbox --disable-seccomp-filter-sandbox
+    plugs:
+      - home
+      - network
+      - audio-playback
+      - shmem
+    environment:
+      HOME: $SNAP_USER_COMMON
+      TMPDIR: $XDG_RUNTIME_DIR
+      DISABLE_WAYLAND: 1
+
+plugs:
+  shmem:
+    interface: shared-memory
+    private: true

@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Lunar Client
+GenericName=Lunar Client
+Comment=A modpack for all modern versions of Minecraft!
+Exec=lunar-client
+Icon=/snap/lunar-client/current/meta/gui/icon.png
+Terminal=false
+Type=Application
+StartupNotify=false
+Categories=Application;Game
+Keywords=Minecraft;
