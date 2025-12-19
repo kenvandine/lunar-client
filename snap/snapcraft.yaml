@@ -1,28 +1,33 @@
 name: lunar-client
-base: core22
-version: 2.15.1
+base: core24
+version: 3.5.15
 summary: Lunar Client
 description: |
    Lunar Client
 
 grade: stable
 confinement: strict
-
-architectures:
-  - build-on: amd64
 compression: lzo
+platforms:
+  amd64:
+
+layout:
+  /usr/bin/zenity:
+    bind-file: $SNAP/usr/bin/zenity
 
 parts:
   lunar-client:
     plugin: nil
     build-packages:
       - wget
-    override-pull: |
+    stage-packages:
+      - zenity
+    override-build: |
       craftctl default
-      wget -O lunar-client https://launcherupdates.lunarclientcdn.com/Lunar%20Client-$SNAPCRAFT_PROJECT_VERSION.AppImage
+      wget -O lunar-client https://launcherupdates.lunarclientcdn.com/Lunar%20Client-$SNAPCRAFT_PROJECT_VERSION-ow.AppImage
       chmod a+x lunar-client
       ./lunar-client --appimage-extract
-      mv squashfs-root/* $CRAFT_PART_INSTALL
+      mv squashfs-root/* $CRAFT_PART_INSTALL/
     prime:
       - -usr/lib
       - -chrome-sandbox
@@ -30,7 +35,8 @@ parts:
 apps:
   lunar-client:
     extensions: [gnome]
-    command: lunarclient --no-sandbox --disable-seccomp-filter-sandbox
+    command: AppRun --no-sandbox --disable-seccomp-filter-sandbox
+    desktop: lunarclient.desktop
     plugs:
       - home
       - network
@@ -40,6 +46,7 @@ apps:
       HOME: $SNAP_USER_COMMON
       TMPDIR: $XDG_RUNTIME_DIR
       DISABLE_WAYLAND: 1
+      APPDIR: $SNAP
 
 plugs:
   shmem:
