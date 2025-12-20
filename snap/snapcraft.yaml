@@ -11,31 +11,34 @@ compression: lzo
 platforms:
   amd64:
 
-layout:
-  /usr/bin/zenity:
-    bind-file: $SNAP/usr/bin/zenity
-
 parts:
+  launcher:
+    plugin: dump
+    source: launcher
+    override-build: |
+      cp launcher $CRAFT_PART_INSTALL/
+
   lunar-client:
     plugin: nil
     build-packages:
       - wget
-    stage-packages:
-      - zenity
     override-build: |
       craftctl default
       wget -O lunar-client https://launcherupdates.lunarclientcdn.com/Lunar%20Client-$SNAPCRAFT_PROJECT_VERSION-ow.AppImage
       chmod a+x lunar-client
       ./lunar-client --appimage-extract
+      chmod -R a+rX squashfs-root
       mv squashfs-root/* $CRAFT_PART_INSTALL/
+      chmod 755 $CRAFT_PART_INSTALL/
+      sed -i.bak -e 's|Icon=lunarclient$|Icon=${SNAP}/lunarclient.png|g' $CRAFT_PART_INSTALL/lunarclient.desktop
     prime:
-      - -usr/lib
       - -chrome-sandbox
+      - -usr/lib
 
 apps:
   lunar-client:
     extensions: [gnome]
-    command: AppRun --no-sandbox --disable-seccomp-filter-sandbox
+    command: launcher
     desktop: lunarclient.desktop
     plugs:
       - home
@@ -45,10 +48,16 @@ apps:
     environment:
       HOME: $SNAP_USER_COMMON
       TMPDIR: $XDG_RUNTIME_DIR
-      DISABLE_WAYLAND: 1
-      APPDIR: $SNAP
 
 plugs:
   shmem:
     interface: shared-memory
     private: true
+  dot-minecraft:
+    interface: personal-files
+    write:
+      - $HOME/.minecraft
+  dot-lunarclient:
+    interface: personal-files
+    write:
+      - $HOME/.lunarclient
