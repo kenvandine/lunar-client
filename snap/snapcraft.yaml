@@ -1,9 +1,11 @@
 name: lunar-client
 base: core24
 version: 3.5.15
-summary: Lunar Client
+title: Lunar Client
+summary: A modpack for all modern versions of Minecraft!
 description: |
-   Lunar Client
+   Boosted frames, all the popular mods, multi OS support, and did we mention
+   it’s completely free? So what are you waiting for - Download today!
 
 grade: stable
 confinement: strict
