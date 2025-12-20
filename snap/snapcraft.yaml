@@ -13,6 +13,11 @@ compression: lzo
 platforms:
   amd64:
 
+contact: https://github.com/kenvandine/lunar-client/issues
+issues: https://github.com/kenvandine/lunar-client/issues
+website: https://www.lunarclient.com/
+icon: icon.png
+
 parts:
   launcher:
     plugin: dump
