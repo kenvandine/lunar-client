@@ -25,6 +25,12 @@ parts:
     override-build: |
       cp launcher $CRAFT_PART_INSTALL/
 
+  getpwuid:
+    plugin: nil
+    source: src
+    override-build: |
+      gcc -shared -fPIC -o $CRAFT_PART_INSTALL/getpwuid_stub.so getpwuid_stub.c -ldl
+
   lunar-client:
     plugin: nil
     build-packages:
@@ -60,11 +66,3 @@ plugs:
   shmem:
     interface: shared-memory
     private: true
-  dot-minecraft:
-    interface: personal-files
-    write:
-      - $HOME/.minecraft
-  dot-lunarclient:
-    interface: personal-files
-    write:
-      - $HOME/.lunarclient
