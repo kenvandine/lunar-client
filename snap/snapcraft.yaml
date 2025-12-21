@@ -21,13 +21,15 @@ icon: icon.png
 parts:
   launcher:
     plugin: dump
-    source: launcher
+    source: ./launcher
+    source-type: local
     override-build: |
       cp launcher $CRAFT_PART_INSTALL/
 
   getpwuid:
     plugin: nil
-    source: src
+    source: ./src
+    source-type: local
     override-build: |
       gcc -shared -fPIC -o $CRAFT_PART_INSTALL/getpwuid_stub.so getpwuid_stub.c -ldl
 
