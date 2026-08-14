@@ -31,6 +31,11 @@ parts:
     override-build: |
       gcc -shared -fPIC -o $CRAFT_PART_INSTALL/getpwuid_stub.so getpwuid_stub.c -ldl
 
+  x11-utils:
+    plugin: nil
+    stage-packages:
+      - x11-xserver-utils
+
   lunar-client:
     plugin: nil
     build-packages:
