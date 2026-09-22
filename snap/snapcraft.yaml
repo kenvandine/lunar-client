@@ -1,6 +1,6 @@
 name: lunar-client
 base: core24
-version: 3.7.18
+adopt-info: lunar-client
 title: Lunar Client
 summary: A modpack for all modern versions of Minecraft!
 description: |
@@ -40,15 +40,19 @@ parts:
     plugin: nil
     build-packages:
       - wget
+      - curl
     override-build: |
       craftctl default
-      wget -O lunar-client https://launcherupdates.lunarclientcdn.com/Lunar%20Client-$SNAPCRAFT_PROJECT_VERSION-ow.AppImage
+      url=$(curl -sIL -o /dev/null -w '%{url_effective}' "https://api.lunarclientprod.com/site/download?os=linux")
+      wget -O lunar-client "$url"
       chmod a+x lunar-client
       ./lunar-client --appimage-extract
       chmod -R a+rX squashfs-root
       mv squashfs-root/* $CRAFT_PART_INSTALL/
       chmod 755 $CRAFT_PART_INSTALL/
       sed -i.bak -e 's|Icon=lunarclient$|Icon=${SNAP}/lunarclient.png|g' $CRAFT_PART_INSTALL/lunarclient.desktop
+      version=$(echo "$url" | grep -oP 'Lunar%20Client-\K[0-9.]+(?=-ow)')
+      craftctl set version="$version"
     prime:
       - -chrome-sandbox
       - -usr/lib
